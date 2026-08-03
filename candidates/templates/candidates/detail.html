@@ -1,0 +1,101 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="row">
+
+<div class="col-md-8">
+
+<div class="card shadow">
+
+<div class="card-header bg-primary text-white">
+
+<h3>Candidate Profile</h3>
+
+</div>
+
+<div class="card-body">
+
+<h3>{{ candidate.name }}</h3>
+
+<hr>
+
+<p><strong>Email :</strong> {{ candidate.email }}</p>
+
+<p><strong>Phone :</strong> {{ candidate.phone }}</p>
+
+<p><strong>Applied Job :</strong> {{ candidate.job }}</p>
+
+<hr>
+
+<h4>AI Resume Analysis</h4>
+
+<p>
+
+<strong>AI Score :</strong>
+
+<span class="badge bg-success">
+
+{{ candidate.ai_score }} %
+
+</span>
+
+</p>
+
+<p>
+
+<strong>Recommendation :</strong>
+
+{{ candidate.recommendation }}
+
+</p>
+
+<hr>
+
+<h5>Matched Skills</h5>
+
+<div class="alert alert-success">
+
+{{ candidate.matched_skills }}
+
+</div>
+
+<h5>Missing Skills</h5>
+
+<div class="alert alert-danger">
+
+{{ candidate.missing_skills }}
+
+</div>
+
+<hr>
+
+<a href="{{ candidate.resume.url }}"
+target="_blank"
+class="btn btn-primary">
+
+View Resume
+
+</a>
+
+<a href="{{ candidate.resume.url }}"
+download
+class="btn btn-success">
+
+Download Resume
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

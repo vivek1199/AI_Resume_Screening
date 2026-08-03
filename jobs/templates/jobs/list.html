@@ -1,0 +1,67 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2 class="mb-4">
+
+Available Jobs
+
+</h2>
+
+<div class="row">
+
+{% for job in jobs %}
+
+<div class="col-md-6 mb-4">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4>{{ job.title }}</h4>
+
+<p>
+
+<strong>Experience:</strong>
+
+{{ job.experience }} Years
+
+</p>
+
+<p>
+
+<strong>Salary:</strong>
+
+{{ job.salary }}
+
+</p>
+
+<p>
+
+{{ job.description|truncatewords:25 }}
+
+</p>
+
+<a
+href="{% url 'apply' %}?job={{ job.id }}"
+class="btn btn-success">
+
+Apply Now
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+{% endblock %}

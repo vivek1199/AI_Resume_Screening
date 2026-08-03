@@ -1,0 +1,139 @@
+{% extends "base/base.html" %}
+
+{% block title %}
+Candidate Rankings
+{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2 class="mb-4">🏆 Candidate Rankings</h2>
+
+<table class="table table-hover table-bordered">
+
+<thead class="table-dark">
+
+<tr>
+
+<th>Rank</th>
+<th>Candidate</th>
+<th>Applied Job</th>
+<th>AI Score</th>
+<th>Recommendation</th>
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for candidate in candidates %}
+
+<tr>
+
+<td>
+
+{% if forloop.counter == 1 %}
+🥇
+
+{% elif forloop.counter == 2 %}
+🥈
+
+{% elif forloop.counter == 3 %}
+🥉
+
+{% else %}
+
+{{ forloop.counter }}
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ candidate.name }}
+
+</td>
+
+<td>
+
+{{ candidate.job }}
+
+</td>
+
+<td>
+
+{% if candidate.ai_score >= 80 %}
+
+<span class="badge bg-success">
+
+{{ candidate.ai_score }} %
+
+</span>
+
+{% elif candidate.ai_score >= 60 %}
+
+<span class="badge bg-warning text-dark">
+
+{{ candidate.ai_score }} %
+
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+
+{{ candidate.ai_score }} %
+
+</span>
+
+{% endif %}
+
+</td>
+
+<td>
+
+{{ candidate.recommendation }}
+
+</td>
+
+<td>
+
+{{ candidate.status }}
+
+</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="6" class="text-center">
+
+No Candidates Found
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

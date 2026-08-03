@@ -1,0 +1,45 @@
+{% extends "base/base.html" %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h2>
+
+Apply for
+
+{{ job.title }}
+
+</h2>
+
+<hr>
+
+<form
+method="POST"
+enctype="multipart/form-data">
+
+{% csrf_token %}
+
+{{ form.as_p }}
+
+<button
+type="submit"
+class="btn btn-success">
+
+Submit Application
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+{% endblock %}

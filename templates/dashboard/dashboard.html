@@ -1,0 +1,81 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h1 class="mb-4">
+        Recruiter Dashboard
+    </h1>
+
+    <div class="row">
+
+        <div class="col-md-3">
+
+            <div class="card bg-primary text-white">
+
+                <div class="card-body">
+
+                    <h3>{{ total_jobs }}</h3>
+
+                    <p>Total Jobs</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card bg-success text-white">
+
+                <div class="card-body">
+
+                    <h3>{{ total_candidates }}</h3>
+
+                    <p>Candidates</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card bg-warning">
+
+                <div class="card-body">
+
+                    <h3>{{ shortlisted }}</h3>
+
+                    <p>Shortlisted</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-3">
+
+            <div class="card bg-danger text-white">
+
+                <div class="card-body">
+
+                    <h3>{{ rejected }}</h3>
+
+                    <p>Rejected</p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+
+<div class="container mt-5">
+
+<h2>Candidates</h2>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+    <th>Rank</th>
+    <th>Name</th>
+    <th>Job</th>
+    <th>AI Score</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for candidate in candidates %}
+
+<tr>
+
+<td>
+
+{% if forloop.counter == 1 %}
+🥇
+
+{% elif forloop.counter == 2 %}
+🥈
+
+{% elif forloop.counter == 3 %}
+🥉
+
+{% else %}
+
+{{ forloop.counter }}
+
+{% endif %}
+
+</td>
+
+<td>{{ candidate.name }}</td>
+
+<td>{{ candidate.job.title }}</td>
+
+<td>
+
+{% if candidate.ai_score >= 80 %}
+
+<span class="badge bg-success">
+{{ candidate.ai_score }} %
+</span>
+
+{% elif candidate.ai_score >= 60 %}
+
+<span class="badge bg-warning text-dark">
+{{ candidate.ai_score }} %
+</span>
+
+{% else %}
+
+<span class="badge bg-danger">
+{{ candidate.ai_score }} %
+</span>
+
+{% endif %}
+
+</td>
+
+<td>{{ candidate.status }}</td>
+
+<td>
+    <a href="{% url 'candidate_detail' candidate.id %}"
+       class="btn btn-primary btn-sm">
+        View
+    </a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+</div>
+
+{% endblock %}
