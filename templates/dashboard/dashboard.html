@@ -1,24 +1,167 @@
+
 {% extends 'base/base.html' %}
+
+{% block title %}Recruiter Dashboard | TalentLens{% endblock %}
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="dashboard-page">
 
-    <h1 class="mb-4">
-        Recruiter Dashboard
-    </h1>
+    <!-- Page Heading -->
+    <div class="dashboard-heading">
+        <div>
+            <span class="dashboard-label">RECRUITER WORKSPACE</span>
+            <h1>Dashboard Overview</h1>
+            <p>Monitor your hiring activity and discover top candidates.</p>
+        </div>
 
-    <div class="row">
+        <div class="dashboard-actions">
+            <a href="{% url 'job_list' %}" class="btn btn-light">
+                <i class="bi bi-briefcase"></i> Manage Jobs
+            </a>
 
-        <div class="col-md-3">
+            <a href="{% url 'upload_candidate' %}" class="btn btn-primary">
+                <i class="bi bi-cloud-upload"></i> Upload Resume
+            </a>
+        </div>
+    </div>
 
-            <div class="card bg-primary text-white">
+    <!-- Statistics -->
+    <div class="row g-3 dashboard-stats">
 
-                <div class="card-body">
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon purple">
+                    <i class="bi bi-briefcase"></i>
+                </div>
+                <p>Total Jobs</p>
+                <h2>{{ total_jobs }}</h2>
+                <small>{{ open_jobs }} Open Positions</small>
+            </div>
+        </div>
 
-                    <h3>{{ total_jobs }}</h3>
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon blue">
+                    <i class="bi bi-people"></i>
+                </div>
+                <p>Total Candidates</p>
+                <h2>{{ total_candidates }}</h2>
+                <small>All applications</small>
+            </div>
+        </div>
 
-                    <p>Total Jobs</p>
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <i class="bi bi-person-check"></i>
+                </div>
+                <p>Shortlisted</p>
+                <h2>{{ shortlisted }}</h2>
+                <small>Selected for next stage</small>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="stat-card">
+                <div class="stat-icon orange">
+                    <i class="bi bi-graph-up-arrow"></i>
+                </div>
+                <p>Average AI Score</p>
+                <h2>{{ average_score }}%</h2>
+                <small>Across all candidates</small>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Main Dashboard -->
+    <div class="row g-3 mt-2">
+
+        <!-- Recent Candidates -->
+        <div class="col-xl-8">
+
+            <div class="dashboard-card">
+
+                <div class="card-heading">
+                    <div>
+                        <h5>Recent Applications</h5>
+                        <p>Latest candidate submissions</p>
+                    </div>
+
+                    <a href="{% url 'candidate_list' %}">
+                        View All <i class="bi bi-arrow-right"></i>
+                    </a>
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table dashboard-table">
+
+                        <thead>
+                            <tr>
+                                <th>Candidate</th>
+                                <th>Job Position</th>
+                                <th>AI Score</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                        {% for candidate in recent_candidates %}
+
+                            <tr>
+                                <td>
+                                    <div class="candidate-name">
+                                        <span class="candidate-avatar">
+                                            {{ candidate.name|slice:":1"|upper }}
+                                        </span>
+
+                                        <div>
+                                            <strong>{{ candidate.name }}</strong>
+                                            <small>{{ candidate.email }}</small>
+                                        </div>
+                                    </div>
+                                </td>
+
+                                <td>{{ candidate.job.title }}</td>
+
+                                <td>
+                                    <span class="score-badge">
+                                        {{ candidate.ai_score|floatformat:1 }}%
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <span class="status-badge">
+                                        {{ candidate.status }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <a href="{% url 'candidate_detail' candidate.id %}"
+                                       class="view-link">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+
+                        {% empty %}
+
+                            <tr>
+                                <td colspan="5" class="empty-message">
+                                    No candidates available yet.
+                                    Upload a resume to get started.
+                                </td>
+                            </tr>
+
+                        {% endfor %}
+
+                        </tbody>
+
+                    </table>
 
                 </div>
 
@@ -26,55 +169,125 @@
 
         </div>
 
-        <div class="col-md-3">
+        <!-- Pipeline -->
+        <div class="col-xl-4">
 
-            <div class="card bg-success text-white">
+            <div class="dashboard-card pipeline-card">
 
-                <div class="card-body">
+                <div class="card-heading">
+                    <div>
+                        <h5>Hiring Pipeline</h5>
+                        <p>Candidate application status</p>
+                    </div>
+                    <i class="bi bi-bar-chart-line pipeline-icon"></i>
+                </div>
 
-                    <h3>{{ total_candidates }}</h3>
+                <div class="pipeline-number">
+                    {{ total_candidates }}
+                    <small>Total Candidates</small>
+                </div>
 
-                    <p>Candidates</p>
+                <div class="pipeline-bar">
+
+                    {% if total_candidates %}
+                    <span class="pipeline-shortlisted"
+                        style="width:{% widthratio shortlisted total_candidates 100 %}%">
+                    </span>
+
+                    <span class="pipeline-pending"
+                        style="width:{% widthratio pending total_candidates 100 %}%">
+                    </span>
+
+                    <span class="pipeline-rejected"
+                        style="width:{% widthratio rejected total_candidates 100 %}%">
+                    </span>
+                    {% endif %}
 
                 </div>
 
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-warning">
-
-                <div class="card-body">
-
-                    <h3>{{ shortlisted }}</h3>
-
-                    <p>Shortlisted</p>
-
+                <div class="pipeline-item">
+                    <span><i class="pipeline-dot green-dot"></i> Shortlisted</span>
+                    <strong>{{ shortlisted }}</strong>
                 </div>
 
-            </div>
-
-        </div>
-
-        <div class="col-md-3">
-
-            <div class="card bg-danger text-white">
-
-                <div class="card-body">
-
-                    <h3>{{ rejected }}</h3>
-
-                    <p>Rejected</p>
-
+                <div class="pipeline-item">
+                    <span><i class="pipeline-dot orange-dot"></i> Pending</span>
+                    <strong>{{ pending }}</strong>
                 </div>
+
+                <div class="pipeline-item">
+                    <span><i class="pipeline-dot red-dot"></i> Rejected</span>
+                    <strong>{{ rejected }}</strong>
+                </div>
+
+                <a href="{% url 'ranking' %}"
+                   class="btn btn-outline-primary w-100 mt-4">
+                    View Candidate Rankings
+                </a>
 
             </div>
 
         </div>
 
     </div>
+
+    <!-- Top Candidates -->
+    <div class="dashboard-card top-candidates">
+
+        <div class="card-heading">
+            <div>
+                <h5>Top Matching Candidates</h5>
+                <p>Highest AI matching scores</p>
+            </div>
+
+            <a href="{% url 'ranking' %}">
+                View Rankings <i class="bi bi-arrow-right"></i>
+            </a>
+        </div>
+
+        <div class="row g-3">
+
+            {% for candidate in top_candidates %}
+
+            <div class="col-md-6 col-xl-4">
+
+                <div class="top-candidate-item">
+
+                    <div class="candidate-avatar">
+                        {{ candidate.name|slice:":1"|upper }}
+                    </div>
+
+                    <div class="top-candidate-info">
+                        <strong>{{ candidate.name }}</strong>
+                        <small>{{ candidate.job.title }}</small>
+                    </div>
+
+                    <span class="top-score">
+                        {{ candidate.ai_score|floatformat:1 }}%
+                    </span>
+
+                </div>
+
+            </div>
+
+            {% empty %}
+
+            <div class="col-12">
+                <p class="text-muted">
+                    Candidate rankings will appear here after resume uploads.
+                </p>
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+    <p class="dashboard-disclaimer">
+        <i class="bi bi-info-circle"></i>
+        AI scores assist recruiter review and should not replace human hiring decisions.
+    </p>
 
 </div>
 

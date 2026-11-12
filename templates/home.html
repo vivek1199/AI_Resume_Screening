@@ -1,30 +1,155 @@
+
 {% extends 'base/base.html' %}
 
 {% block title %}
-Home
+AI Resume Screening | Home
 {% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="container py-5">
 
-    <div class="card shadow">
+    <!-- Hero Section -->
+    <div class="row align-items-center py-5">
 
-        <div class="card-body">
+        <div class="col-lg-7">
 
-            <h1 class="text-primary">
+            <span class="badge bg-primary mb-3 p-2">
+                AI POWERED RECRUITMENT
+            </span>
 
-                AI Resume Screening System
-
+            <h1 class="display-4 fw-bold text-dark">
+                Find Your Dream Job with
+                <span class="text-primary">AI Resume Screening</span>
             </h1>
 
-            <p>
-
-                Welcome to our project.
-
+            <p class="lead text-muted mt-4">
+                Create your account, explore job opportunities,
+                upload your resume and let AI analyze your skills
+                to help you find the right career opportunity.
             </p>
 
+            <div class="mt-4">
+
+                <a href="{% url 'register' %}"
+                   class="btn btn-primary btn-lg me-2 mb-2">
+                    Get Started - Register
+                </a>
+
+                <a href="{% url 'login' %}"
+                   class="btn btn-outline-dark btn-lg mb-2">
+                    Login
+                </a>
+
+            </div>
+
         </div>
+
+        <div class="col-lg-5 text-center mt-5 mt-lg-0">
+
+            <div class="card shadow border-0 p-5">
+
+                <div class="display-1 text-primary mb-3">
+                    <i class="bi bi-file-earmark-person"></i>
+                </div>
+
+                <h3 class="fw-bold">
+                    Smart Resume Analysis
+                </h3>
+
+                <p class="text-muted">
+                    Upload your resume and get AI-based
+                    skill matching and candidate evaluation.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <hr class="my-5">
+
+    <!-- Features Section -->
+    <div class="text-center mb-5">
+
+        <h2 class="fw-bold">
+            How Our Platform Works
+        </h2>
+
+        <p class="text-muted">
+            Simple steps to begin your career journey.
+        </p>
+
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+
+            <div class="card h-100 shadow-sm border-0 p-4 text-center">
+
+                <i class="bi bi-person-plus display-4 text-primary mb-3"></i>
+
+                <h5 class="fw-bold">1. Create Account</h5>
+
+                <p class="text-muted">
+                    Register as a candidate and access your personal dashboard.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card h-100 shadow-sm border-0 p-4 text-center">
+
+                <i class="bi bi-file-earmark-arrow-up display-4 text-primary mb-3"></i>
+
+                <h5 class="fw-bold">2. Upload Resume</h5>
+
+                <p class="text-muted">
+                    Upload your resume and let our AI analyze your skills.
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="col-md-4">
+
+            <div class="card h-100 shadow-sm border-0 p-4 text-center">
+
+                <i class="bi bi-graph-up-arrow display-4 text-primary mb-3"></i>
+
+                <h5 class="fw-bold">3. Track Results</h5>
+
+                <p class="text-muted">
+                    View your AI score and track your application progress.
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="text-center bg-primary text-white rounded-4 p-5 mt-5">
+
+        <h2 class="fw-bold">
+            Ready to Get Started?
+        </h2>
+
+        <p class="mb-4">
+            Create your free candidate account today.
+        </p>
+
+        <a href="{% url 'register' %}"
+           class="btn btn-light btn-lg">
+            Register Now
+        </a>
 
     </div>
 

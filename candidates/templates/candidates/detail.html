@@ -1,100 +1,212 @@
+
 {% extends "base/base.html" %}
+
+{% block title %}Candidate Profile | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="profile-page">
 
-<div class="row">
+    <!-- Page Heading -->
+    <div class="profile-page-heading">
+        <div>
+            <span class="dashboard-eyebrow">RECRUITMENT WORKSPACE</span>
+            <h2>Candidate Profile</h2>
+            <p>Review candidate information and AI resume analysis.</p>
+        </div>
 
-<div class="col-md-8">
+        <a href="{% url 'candidate_list' %}" class="profile-back-btn">
+            <i class="bi bi-arrow-left"></i> Back to Candidates
+        </a>
+    </div>
 
-<div class="card shadow">
+    <!-- Candidate Header -->
+    <div class="profile-header-card">
+        <div class="profile-avatar">
+            {{ candidate.name|first|upper }}
+        </div>
 
-<div class="card-header bg-primary text-white">
+        <div class="profile-header-info">
+            <h3>{{ candidate.name }}</h3>
+            <p><i class="bi bi-envelope"></i> {{ candidate.email }}</p>
+            <p><i class="bi bi-briefcase"></i> {{ candidate.job.title }}</p>
+        </div>
 
-<h3>Candidate Profile</h3>
+        <div class="profile-status">
+            {% if candidate.status == "Shortlisted" %}
+                <span class="status-badge status-shortlisted">
+                    <i class="bi bi-check-circle"></i> Shortlisted
+                </span>
+            {% elif candidate.status == "Rejected" %}
+                <span class="status-badge status-rejected">
+                    <i class="bi bi-x-circle"></i> Rejected
+                </span>
+            {% else %}
+                <span class="status-badge status-pending">
+                    <i class="bi bi-clock"></i> Pending
+                </span>
+            {% endif %}
+        </div>
+    </div>
 
-</div>
+    <!-- Main Profile Grid -->
+    <div class="profile-grid">
 
-<div class="card-body">
+        <!-- Left Column -->
+        <div class="profile-main-column">
 
-<h3>{{ candidate.name }}</h3>
+            <!-- Personal Information -->
+            <div class="profile-section-card">
+                <div class="profile-section-heading">
+                    <div class="profile-section-icon purple">
+                        <i class="bi bi-person"></i>
+                    </div>
+                    <div>
+                        <h5>Personal Information</h5>
+                        <p>Candidate contact details</p>
+                    </div>
+                </div>
 
-<hr>
+                <div class="profile-info-grid">
+                    <div class="profile-info-item">
+                        <span>Full Name</span>
+                        <strong>{{ candidate.name }}</strong>
+                    </div>
 
-<p><strong>Email :</strong> {{ candidate.email }}</p>
+                    <div class="profile-info-item">
+                        <span>Email Address</span>
+                        <strong>{{ candidate.email }}</strong>
+                    </div>
 
-<p><strong>Phone :</strong> {{ candidate.phone }}</p>
+                    <div class="profile-info-item">
+                        <span>Phone Number</span>
+                        <strong>{{ candidate.phone|default:"Not provided" }}</strong>
+                    </div>
 
-<p><strong>Applied Job :</strong> {{ candidate.job }}</p>
+                    <div class="profile-info-item">
+                        <span>Applied Position</span>
+                        <strong>{{ candidate.job.title }}</strong>
+                    </div>
+                </div>
+            </div>
 
-<hr>
+            <!-- Skills Analysis -->
+            <div class="profile-section-card">
+                <div class="profile-section-heading">
+                    <div class="profile-section-icon green">
+                        <i class="bi bi-lightbulb"></i>
+                    </div>
+                    <div>
+                        <h5>Skills Analysis</h5>
+                        <p>Skills identified during resume screening</p>
+                    </div>
+                </div>
 
-<h4>AI Resume Analysis</h4>
+                <div class="skills-group">
+                    <h6><i class="bi bi-check-circle-fill"></i> Matched Skills</h6>
+                    <div class="skills-content matched-skills">
+                        {{ candidate.matched_skills|default:"No matched skills available." }}
+                    </div>
+                </div>
 
-<p>
+                <div class="skills-group">
+                    <h6><i class="bi bi-exclamation-circle-fill"></i> Missing Skills</h6>
+                    <div class="skills-content missing-skills">
+                        {{ candidate.missing_skills|default:"No missing skills recorded." }}
+                    </div>
+                </div>
 
-<strong>AI Score :</strong>
+                <div class="skills-group">
+                    <h6><i class="bi bi-stars"></i> Extracted Resume Skills</h6>
+                    <div class="skills-content extracted-skills">
+                        {{ candidate.extracted_skills|default:"No extracted skills available." }}
+                    </div>
+                </div>
+            </div>
 
-<span class="badge bg-success">
+        </div>
 
-{{ candidate.ai_score }} %
+        <!-- Right Column -->
+        <div class="profile-side-column">
 
-</span>
+            <!-- AI Score -->
+            <div class="profile-section-card ai-score-card">
+                <div class="profile-section-heading">
+                    <div class="profile-section-icon purple">
+                        <i class="bi bi-graph-up-arrow"></i>
+                    </div>
+                    <div>
+                        <h5>AI Screening Score</h5>
+                        <p>Resume and job compatibility</p>
+                    </div>
+                </div>
 
-</p>
+                <div class="profile-score-display">
+                    <h2>{{ candidate.ai_score|floatformat:1 }}%</h2>
+                    <span>Match Score</span>
+                </div>
 
-<p>
+                <div class="profile-progress-track">
+                    <div class="profile-progress-fill"
+                         style="width: {% if candidate.ai_score > 100 %}100{% elif candidate.ai_score < 0 %}0{% else %}{{ candidate.ai_score }}{% endif %}%;">
+                    </div>
+                </div>
 
-<strong>Recommendation :</strong>
+                <div class="profile-score-labels">
+                    <span>0%</span>
+                    <span>100%</span>
+                </div>
+            </div>
 
-{{ candidate.recommendation }}
+            <!-- Recommendation -->
+            <div class="profile-section-card recommendation-card">
+                <div class="profile-section-heading">
+                    <div class="profile-section-icon orange">
+                        <i class="bi bi-award"></i>
+                    </div>
+                    <div>
+                        <h5>AI Recommendation</h5>
+                        <p>Screening result</p>
+                    </div>
+                </div>
 
-</p>
+                <div class="recommendation-content">
+                    <strong>{{ candidate.recommendation|default:"No recommendation available." }}</strong>
+                </div>
+            </div>
 
-<hr>
+            <!-- Resume Actions -->
+            <div class="profile-section-card resume-card">
+                <div class="profile-section-heading">
+                    <div class="profile-section-icon blue">
+                        <i class="bi bi-file-earmark-pdf"></i>
+                    </div>
+                    <div>
+                        <h5>Candidate Resume</h5>
+                        <p>View or download uploaded document</p>
+                    </div>
+                </div>
 
-<h5>Matched Skills</h5>
+                {% if candidate.resume %}
+                    <a href="{{ candidate.resume.url }}"
+                       target="_blank"
+                       class="resume-action-btn resume-view-btn">
+                        <i class="bi bi-eye"></i> View Resume
+                    </a>
 
-<div class="alert alert-success">
+                    <a href="{{ candidate.resume.url }}"
+                       download
+                       class="resume-action-btn resume-download-btn">
+                        <i class="bi bi-download"></i> Download Resume
+                    </a>
+                {% else %}
+                    <p>No resume uploaded.</p>
+                {% endif %}
+            </div>
 
-{{ candidate.matched_skills }}
+        </div>
 
-</div>
-
-<h5>Missing Skills</h5>
-
-<div class="alert alert-danger">
-
-{{ candidate.missing_skills }}
-
-</div>
-
-<hr>
-
-<a href="{{ candidate.resume.url }}"
-target="_blank"
-class="btn btn-primary">
-
-View Resume
-
-</a>
-
-<a href="{{ candidate.resume.url }}"
-download
-class="btn btn-success">
-
-Download Resume
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 

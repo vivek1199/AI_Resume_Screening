@@ -1,48 +1,68 @@
+
 {% extends 'base/base.html' %}
 
-{% block title %}
-Edit Job
-{% endblock %}
+{% block title %}Edit Job | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="job-form-page">
 
-<div class="card shadow">
+    <!-- Header -->
+    <div class="job-form-page-header">
+        <div>
+            <span class="dashboard-eyebrow">RECRUITMENT WORKSPACE</span>
+            <h2>Edit Job Position</h2>
+            <p>Update the details of your existing job opening.</p>
+        </div>
 
-<div class="card-header bg-warning">
+        <a href="{% url 'job_list' %}" class="job-form-back">
+            <i class="bi bi-arrow-left"></i> Back to Jobs
+        </a>
+    </div>
 
-<h3>Edit Job</h3>
+    <!-- Edit Form -->
+    <div class="job-form-card">
 
-</div>
+        <div class="job-form-card-heading">
+            <div class="job-form-heading-icon">
+                <i class="bi bi-pencil-square"></i>
+            </div>
 
-<div class="card-body">
+            <div>
+                <h5>Update Job Information</h5>
+                <p>Modify the job details and save your changes.</p>
+            </div>
+        </div>
 
-<form method="POST">
+        <form method="POST">
 
-{% csrf_token %}
+            {% csrf_token %}
 
-{{ form.as_p }}
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
 
-<button
-class="btn btn-primary">
+            <div class="job-form-fields">
+                {{ form.as_p }}
+            </div>
 
-Update Job
+            <div class="job-form-actions">
 
-</button>
+                <a href="{% url 'job_list' %}" class="job-cancel-btn">
+                    Cancel
+                </a>
 
-<a href="{% url 'job_list' %}"
-class="btn btn-secondary">
+                <button type="submit" class="job-save-btn">
+                    <i class="bi bi-check-circle"></i> Update Job
+                </button>
 
-Cancel
+            </div>
 
-</a>
+        </form>
 
-</form>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 

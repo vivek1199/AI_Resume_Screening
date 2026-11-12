@@ -1,24 +1,130 @@
+
 {% extends 'base/base.html' %}
+
+{% block title %}Upload Resume | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="resume-upload-page">
 
-<h2>Upload Candidate</h2>
+    <!-- Page Header -->
+    <div class="resume-upload-header">
+        <div>
+            <span class="dashboard-eyebrow">AI RECRUITMENT WORKSPACE</span>
+            <h2>Upload Candidate Resume</h2>
+            <p>Upload a resume and let AI analyze the candidate's suitability.</p>
+        </div>
 
-<form method="POST" enctype="multipart/form-data">
+        <a href="{% url 'candidate_list' %}" class="upload-back-btn">
+            <i class="bi bi-arrow-left"></i> Back to Candidates
+        </a>
+    </div>
 
-{% csrf_token %}
+    <div class="resume-upload-grid">
 
-{{ form.as_p }}
+        <!-- Upload Form -->
+        <div class="resume-upload-card">
 
-<button class="btn btn-primary">
+            <div class="resume-upload-card-heading">
+                <div class="resume-upload-icon">
+                    <i class="bi bi-cloud-arrow-up"></i>
+                </div>
 
-Upload Resume
+                <div>
+                    <h5>Candidate Information</h5>
+                    <p>Enter candidate details and upload their resume.</p>
+                </div>
+            </div>
 
-</button>
+            <form method="POST" enctype="multipart/form-data">
 
-</form>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                <div class="resume-form-fields">
+                    {{ form.as_p }}
+                </div>
+
+                <div class="resume-upload-note">
+                    <i class="bi bi-info-circle"></i>
+                    Supported resume formats: PDF and DOCX.
+                </div>
+
+                <button type="submit" class="resume-submit-btn">
+                    <i class="bi bi-stars"></i>
+                    Upload & Analyze Resume
+                </button>
+
+            </form>
+
+        </div>
+
+        <!-- Information Panel -->
+        <div class="resume-upload-side">
+
+            <div class="resume-ai-info-card">
+
+                <div class="resume-ai-icon">
+                    <i class="bi bi-robot"></i>
+                </div>
+
+                <h5>AI Resume Screening</h5>
+
+                <p>
+                    Our AI engine analyzes the uploaded resume
+                    against the selected job requirements.
+                </p>
+
+                <div class="resume-feature-list">
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Resume text extraction
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Automatic skill detection
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Matched and missing skills
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        AI compatibility score
+                    </div>
+
+                    <div>
+                        <i class="bi bi-check-circle-fill"></i>
+                        Hiring recommendation
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="resume-upload-tip">
+                <i class="bi bi-lightbulb"></i>
+                <div>
+                    <strong>Tip</strong>
+                    <p>
+                        Upload a clear and readable resume
+                        for better text extraction and analysis.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
 
 </div>
 

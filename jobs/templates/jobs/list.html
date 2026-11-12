@@ -1,66 +1,181 @@
+
 {% extends "base/base.html" %}
+
+{% block title %}Job Management | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="job-page">
 
-<h2 class="mb-4">
+    <!-- Header -->
+    <div class="job-page-header">
+        <div>
+            <span class="dashboard-eyebrow">RECRUITMENT WORKSPACE</span>
+            <h2>Job Management</h2>
+            <p>Create, manage and monitor your job openings.</p>
+        </div>
 
-Available Jobs
+        <a href="{% url 'add_job' %}" class="btn btn-primary job-add-btn">
+            <i class="bi bi-plus-lg"></i> Add New Job
+        </a>
+    </div>
 
-</h2>
+    <!-- Statistics -->
+    <div class="job-stats-grid">
 
-<div class="row">
+        <div class="job-stat-card">
+            <div class="job-stat-icon purple">
+                <i class="bi bi-briefcase"></i>
+            </div>
+            <div>
+                <span>Total Jobs</span>
+                <h3>{{ total_jobs }}</h3>
+            </div>
+        </div>
 
-{% for job in jobs %}
+        <div class="job-stat-card">
+            <div class="job-stat-icon green">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div>
+                <span>Open Positions</span>
+                <h3>{{ open_jobs }}</h3>
+            </div>
+        </div>
 
-<div class="col-md-6 mb-4">
+        <div class="job-stat-card">
+            <div class="job-stat-icon orange">
+                <i class="bi bi-lock"></i>
+            </div>
+            <div>
+                <span>Closed Positions</span>
+                <h3>{{ closed_jobs }}</h3>
+            </div>
+        </div>
 
-<div class="card shadow">
+    </div>
 
-<div class="card-body">
+    <!-- Job Listing -->
+    <div class="job-table-card">
 
-<h4>{{ job.title }}</h4>
+        <div class="job-table-heading">
+            <div>
+                <h5>All Job Positions</h5>
+                <p>Manage your current and previous job openings.</p>
+            </div>
 
-<p>
+            <span class="job-count-badge">
+                {{ total_jobs }} Jobs
+            </span>
+        </div>
 
-<strong>Experience:</strong>
+        <div class="table-responsive">
 
-{{ job.experience }} Years
+            <table class="table job-table align-middle">
 
-</p>
+                <thead>
+                    <tr>
+                        <th>JOB POSITION</th>
+                        <th>EXPERIENCE</th>
+                        <th>SALARY</th>
+                        <th>STATUS</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
 
-<p>
+                <tbody>
 
-<strong>Salary:</strong>
+                    {% for job in jobs %}
 
-{{ job.salary }}
+                    <tr>
 
-</p>
+                        <td>
+                            <div class="job-title-cell">
+                                <div class="job-avatar">
+                                    <i class="bi bi-briefcase"></i>
+                                </div>
 
-<p>
+                                <div>
+                                    <strong>{{ job.title }}</strong>
+                                    <small>{{ job.company|default:"Company not specified" }}</small>
+                                </div>
+                            </div>
+                        </td>
 
-{{ job.description|truncatewords:25 }}
+                        <td>
+                            <span class="job-experience">
+                                <i class="bi bi-clock"></i>
+                                {{ job.experience }} Years
+                            </span>
+                        </td>
 
-</p>
+                        <td>
+                            <strong class="job-salary">
+                                ₹{{ job.salary }}
+                            </strong>
+                        </td>
 
-<a
-href="{% url 'apply' %}?job={{ job.id }}"
-class="btn btn-success">
+                        <td>
+                            {% if job.status == "Open" %}
+                                <span class="job-status open">
+                                    <i class="bi bi-circle-fill"></i> Open
+                                </span>
+                            {% else %}
+                                <span class="job-status closed">
+                                    <i class="bi bi-circle-fill"></i> Closed
+                                </span>
+                            {% endif %}
+                        </td>
 
-Apply Now
+                        <td>
+                            <div class="job-action-buttons">
 
-</a>
+                                <a href="{% url 'edit_job' job.id %}"
+                                   class="job-edit-btn"
+                                   title="Edit Job">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
 
-</div>
+                                <a href="{% url 'delete_job' job.id %}"
+                                   class="job-delete-btn"
+                                   title="Delete Job">
+                                    <i class="bi bi-trash"></i>
+                                </a>
 
-</div>
+                                {% if job.status == "Open" %}
+                                    <a href="{% url 'apply' %}?job={{ job.id }}"
+                                       class="job-apply-btn">
+                                        Apply
+                                    </a>
+                                {% endif %}
 
-</div>
+                            </div>
+                        </td>
 
-{% endfor %}
+                    </tr>
 
-</div>
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="5" class="job-empty">
+                            <i class="bi bi-briefcase"></i>
+                            <h5>No jobs available</h5>
+                            <p>Create your first job opening to get started.</p>
+
+                            <a href="{% url 'add_job' %}" class="btn btn-primary btn-sm">
+                                Add New Job
+                            </a>
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
 
 </div>
 

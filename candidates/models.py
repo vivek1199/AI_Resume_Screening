@@ -1,5 +1,8 @@
+
 from django.db import models
+from django.contrib.auth.models import User
 from jobs.models import Job
+
 
 class Candidate(models.Model):
 
@@ -7,6 +10,15 @@ class Candidate(models.Model):
         ("Pending", "Pending"),
         ("Shortlisted", "Shortlisted"),
         ("Rejected", "Rejected"),
+    )
+
+    # Connect candidate record with registered user
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="candidate_applications"
     )
 
     name = models.CharField(max_length=100)

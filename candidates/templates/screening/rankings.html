@@ -1,138 +1,185 @@
+
 {% extends "base/base.html" %}
 
-{% block title %}
-Candidate Rankings
-{% endblock %}
+{% block title %}Candidate Rankings | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-4">
+<div class="ranking-page">
 
-<div class="card shadow">
+    <!-- Header -->
+    <div class="ranking-header">
+        <div>
+            <span class="dashboard-eyebrow">RECRUITMENT WORKSPACE</span>
+            <h2>Candidate Leaderboard</h2>
+            <p>Compare candidates based on their AI resume screening scores.</p>
+        </div>
 
-<div class="card-body">
+        <a href="{% url 'candidate_list' %}" class="ranking-back-btn">
+            <i class="bi bi-people"></i> All Candidates
+        </a>
+    </div>
 
-<h2 class="mb-4">🏆 Candidate Rankings</h2>
+    <!-- Ranking Table -->
+    <div class="ranking-table-card">
 
-<table class="table table-hover table-bordered">
+        <div class="ranking-card-heading">
+            <div class="ranking-heading-icon">
+                <i class="bi bi-trophy"></i>
+            </div>
 
-<thead class="table-dark">
+            <div>
+                <h5>Top Candidates</h5>
+                <p>Highest AI scoring candidates appear first.</p>
+            </div>
 
-<tr>
+            <span class="ranking-count">
+                {{ candidates|length }} Candidates
+            </span>
+        </div>
 
-<th>Rank</th>
-<th>Candidate</th>
-<th>Applied Job</th>
-<th>AI Score</th>
-<th>Recommendation</th>
-<th>Status</th>
+        <div class="table-responsive">
 
-</tr>
+            <table class="table ranking-table align-middle">
 
-</thead>
+                <thead>
+                    <tr>
+                        <th>RANK</th>
+                        <th>CANDIDATE</th>
+                        <th>APPLIED JOB</th>
+                        <th>AI SCORE</th>
+                        <th>RECOMMENDATION</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
 
-<tbody>
+                <tbody>
 
-{% for candidate in candidates %}
+                    {% for candidate in candidates %}
 
-<tr>
+                    <tr>
 
-<td>
+                        <!-- Rank -->
+                        <td>
+                            <span class="rank-number">
+                                {% if forloop.counter == 1 %}
+                                    1st
+                                {% elif forloop.counter == 2 %}
+                                    2nd
+                                {% elif forloop.counter == 3 %}
+                                    3rd
+                                {% else %}
+                                    {{ forloop.counter }}th
+                                {% endif %}
+                            </span>
+                        </td>
 
-{% if forloop.counter == 1 %}
-🥇
+                        <!-- Candidate -->
+                        <td>
+                            <div class="ranking-candidate-cell">
+                                <div class="ranking-avatar">
+                                    {{ candidate.name|first|upper }}
+                                </div>
 
-{% elif forloop.counter == 2 %}
-🥈
+                                <div>
+                                    <strong>{{ candidate.name }}</strong>
+                                    <small>{{ candidate.email }}</small>
+                                </div>
+                            </div>
+                        </td>
 
-{% elif forloop.counter == 3 %}
-🥉
+                        <!-- Job -->
+                        <td>
+                            <span class="ranking-job">
+                                {{ candidate.job.title }}
+                            </span>
+                        </td>
 
-{% else %}
+                        <!-- AI Score -->
+                        <td>
+                            <div class="ranking-score-cell">
 
-{{ forloop.counter }}
+                                {% if candidate.ai_score >= 80 %}
+                                    <span class="ranking-score high">
+                                        {{ candidate.ai_score|floatformat:1 }}%
+                                    </span>
+                                {% elif candidate.ai_score >= 60 %}
+                                    <span class="ranking-score medium">
+                                        {{ candidate.ai_score|floatformat:1 }}%
+                                    </span>
+                                {% else %}
+                                    <span class="ranking-score low">
+                                        {{ candidate.ai_score|floatformat:1 }}%
+                                    </span>
+                                {% endif %}
 
-{% endif %}
+                                <div class="ranking-progress">
+                                    <div class="ranking-progress-fill"
+                                         style="width: {% if candidate.ai_score > 100 %}100{% elif candidate.ai_score < 0 %}0{% else %}{{ candidate.ai_score }}{% endif %}%;">
+                                    </div>
+                                </div>
 
-</td>
+                            </div>
+                        </td>
 
-<td>
+                        <!-- Recommendation -->
+                        <td>
+                            <span class="ranking-recommendation">
+                                {{ candidate.recommendation|default:"Not available" }}
+                            </span>
+                        </td>
 
-{{ candidate.name }}
+                        <!-- Status -->
+                        <td>
+                            {% if candidate.status == "Shortlisted" %}
+                                <span class="ranking-status shortlisted">
+                                    Shortlisted
+                                </span>
+                            {% elif candidate.status == "Rejected" %}
+                                <span class="ranking-status rejected">
+                                    Rejected
+                                </span>
+                            {% else %}
+                                <span class="ranking-status pending">
+                                    Pending
+                                </span>
+                            {% endif %}
+                        </td>
 
-</td>
+                        <!-- Action -->
+                        <td>
+                            <a href="{% url 'candidate_detail' candidate.id %}"
+                               class="ranking-view-btn">
+                                View <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </td>
 
-<td>
+                    </tr>
 
-{{ candidate.job }}
+                    {% empty %}
 
-</td>
+                    <tr>
+                        <td colspan="7" class="ranking-empty">
+                            <i class="bi bi-people"></i>
+                            <h5>No Candidates Found</h5>
+                            <p>Upload a resume to start ranking candidates.</p>
 
-<td>
+                            <a href="{% url 'upload_candidate' %}"
+                               class="btn btn-primary btn-sm">
+                                Upload Resume
+                            </a>
+                        </td>
+                    </tr>
 
-{% if candidate.ai_score >= 80 %}
+                    {% endfor %}
 
-<span class="badge bg-success">
+                </tbody>
 
-{{ candidate.ai_score }} %
+            </table>
 
-</span>
-
-{% elif candidate.ai_score >= 60 %}
-
-<span class="badge bg-warning text-dark">
-
-{{ candidate.ai_score }} %
-
-</span>
-
-{% else %}
-
-<span class="badge bg-danger">
-
-{{ candidate.ai_score }} %
-
-</span>
-
-{% endif %}
-
-</td>
-
-<td>
-
-{{ candidate.recommendation }}
-
-</td>
-
-<td>
-
-{{ candidate.status }}
-
-</td>
-
-</tr>
-
-{% empty %}
-
-<tr>
-
-<td colspan="6" class="text-center">
-
-No Candidates Found
-
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+        </div>
+    </div>
 
 </div>
 

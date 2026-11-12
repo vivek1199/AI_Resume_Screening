@@ -1,44 +1,77 @@
+
 <div class="col-md-2 bg-dark text-white vh-100">
 
     <div class="p-3">
 
-        <h4 class="text-center mb-4">
-            Recruiter Panel
-        </h4>
+        {% if user.is_staff or user.is_superuser %}
 
-        <ul class="nav flex-column">
+            <h4 class="text-center mb-4">
+                Admin Panel
+            </h4>
 
-    <li class="nav-item mb-3">
-        <a href="{% url 'dashboard' %}" class="nav-link text-white">
-            🏠 Dashboard
-        </a>
-    </li>
+            <ul class="nav flex-column">
 
-    <li class="nav-item mb-3">
-        <a href="{% url 'candidate_list' %}" class="nav-link text-white">
-            👥 Candidates
-        </a>
-    </li>
+                <li class="nav-item mb-3">
+                    <a href="{% url 'dashboard' %}" class="nav-link text-white">
+                        🏠 Dashboard
+                    </a>
+                </li>
 
-    <li class="nav-item mb-3">
-        <a href="{% url 'job_list' %}" class="nav-link text-white">
-            💼 Jobs
-        </a>
-    </li>
+                <li class="nav-item mb-3">
+                    <a href="{% url 'job_list' %}" class="nav-link text-white">
+                        💼 Job Management
+                    </a>
+                </li>
 
-    <li class="nav-item mb-3">
-        <a href="{% url 'upload_candidate' %}" class="nav-link text-white">
-            📤 Upload Resume
-        </a>
-    </li>
+                <li class="nav-item mb-3">
+                    <a href="{% url 'add_job' %}" class="nav-link text-white">
+                        ➕ Add Job
+                    </a>
+                </li>
 
-    <li class="nav-item mb-3">
-        <a href="{% url 'ranking' %}" class="nav-link text-white">
-            🏆 Rankings
-        </a>
-    </li>
+                <li class="nav-item mb-3">
+                    <a href="{% url 'candidate_list' %}" class="nav-link text-white">
+                        👥 Candidates
+                    </a>
+                </li>
 
-</ul>
+                <li class="nav-item mb-3">
+                    <a href="{% url 'upload_candidate' %}" class="nav-link text-white">
+                        📤 Upload Resume
+                    </a>
+                </li>
+
+                <li class="nav-item mb-3">
+                    <a href="{% url 'ranking' %}" class="nav-link text-white">
+                        🏆 Rankings
+                    </a>
+                </li>
+
+            </ul>
+
+        {% elif user.is_authenticated %}
+
+            <h4 class="text-center mb-4">
+                Candidate Panel
+            </h4>
+
+            <ul class="nav flex-column">
+
+                <li class="nav-item mb-3">
+                    <a href="{% url 'candidate_dashboard' %}" class="nav-link text-white">
+                        🏠 My Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item mb-3">
+                    <a href="{% url 'upload_candidate' %}" class="nav-link text-white">
+                        📤 Upload My Resume
+                    </a>
+                </li>
+
+            </ul>
+
+        {% endif %}
 
     </div>
 

@@ -1,44 +1,177 @@
+
 {% extends 'base/base.html' %}
 
 {% block title %}
-Register
+Create Account | AI Resume Screening
 {% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<style>
+    .register-wrapper {
+        min-height: 80vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 35px 15px;
+    }
 
-    <div class="row justify-content-center">
+    .register-card {
+        width: 100%;
+        max-width: 650px;
+        background: #ffffff;
+        border: none;
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.09);
+    }
 
-        <div class="col-md-6">
+    .register-header {
+        background: linear-gradient(120deg, #2563eb, #4f46e5);
+        color: white;
+        padding: 30px;
+    }
 
-            <div class="card shadow">
+    .register-header h2 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
 
-                <div class="card-header bg-primary text-white">
+    .register-header p {
+        margin: 0;
+        opacity: 0.9;
+    }
 
-                    <h3>Create Account</h3>
+    .register-body {
+        padding: 35px;
+    }
 
-                </div>
+    .register-body form p {
+        margin-bottom: 20px;
+    }
 
-                <div class="card-body">
+    .register-body form label {
+        display: block;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
 
-                    <form method="POST">
+    .register-body form input {
+        display: block;
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #dbe2ea;
+        border-radius: 9px;
+        background: #f8fafc;
+        outline: none;
+        transition: 0.2s;
+    }
 
-                        {% csrf_token %}
+    .register-body form input:focus {
+        border-color: #3b82f6;
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+    }
 
-                        {{ form.as_p }}
+    .register-body form ul {
+        color: #dc2626;
+        font-size: 13px;
+        padding-left: 20px;
+        margin-top: 6px;
+    }
 
-                        <button
-                            type="submit"
-                            class="btn btn-success">
+    .register-btn {
+        width: 100%;
+        padding: 13px;
+        border: none;
+        border-radius: 9px;
+        background: linear-gradient(120deg, #2563eb, #4f46e5);
+        color: white;
+        font-size: 16px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
 
-                            Register
+    .register-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 7px 18px rgba(37, 99, 235, 0.25);
+    }
 
-                        </button>
+    .register-footer {
+        text-align: center;
+        margin-top: 22px;
+        color: #64748b;
+    }
 
-                    </form>
+    .register-footer a {
+        color: #2563eb;
+        font-weight: 600;
+        text-decoration: none;
+    }
 
-                </div>
+    .register-footer a:hover {
+        text-decoration: underline;
+    }
+
+    .register-error {
+        color: #dc2626;
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div class="register-wrapper">
+
+    <div class="register-card">
+
+        <div class="register-header">
+
+            <h2>
+                <i class="bi bi-person-plus me-2"></i>
+                Create Your Account
+            </h2>
+
+            <p>Join us and start your career journey with AI-powered resume screening.</p>
+
+        </div>
+
+        <div class="register-body">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST">
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="register-error">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="register-btn">
+                    Create Account
+                    <i class="bi bi-arrow-right ms-2"></i>
+                </button>
+
+            </form>
+
+            <div class="register-footer">
+
+                Already have an account?
+
+                <a href="{% url 'login' %}">
+                    Login here
+                </a>
 
             </div>
 

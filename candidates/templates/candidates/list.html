@@ -1,95 +1,177 @@
+
 {% extends 'base/base.html' %}
+
+{% block title %}Candidates | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="candidate-page">
 
-<h2>Candidates</h2>
+    <!-- Page Header -->
+    <div class="candidate-header">
+        <div>
+            <span class="dashboard-eyebrow">RECRUITMENT WORKSPACE</span>
+            <h2>Candidate Management</h2>
+            <p>Manage, review and evaluate your job applicants.</p>
+        </div>
 
-<table class="table table-bordered">
+        <a href="{% url 'upload_candidate' %}" class="btn btn-primary candidate-upload-btn">
+            <i class="bi bi-cloud-upload"></i> Upload Resume
+        </a>
+    </div>
 
-<thead>
+    <!-- Candidate Summary -->
+    <div class="candidate-summary">
+        <div class="candidate-summary-card">
+            <div class="summary-icon purple">
+                <i class="bi bi-people"></i>
+            </div>
+            <div>
+                <span>Total Candidates</span>
+                <h3>{{ candidates|length }}</h3>
+            </div>
+        </div>
 
-<tr>
-    <th>Rank</th>
-    <th>Name</th>
-    <th>Job</th>
-    <th>AI Score</th>
-    <th>Status</th>
-    <th>Action</th>
-</tr>
+        <div class="candidate-summary-card">
+            <div class="summary-icon green">
+                <i class="bi bi-check-circle"></i>
+            </div>
+            <div>
+                <span>Shortlisted</span>
+                <h3>{{ shortlisted_count|default:"—" }}</h3>
+            </div>
+        </div>
 
-</thead>
+        <div class="candidate-summary-card">
+            <div class="summary-icon orange">
+                <i class="bi bi-clock"></i>
+            </div>
+            <div>
+                <span>Pending Review</span>
+                <h3>{{ pending_count|default:"—" }}</h3>
+            </div>
+        </div>
+    </div>
 
-<tbody>
+    <!-- Candidate Table -->
+    <div class="candidate-table-card">
 
-{% for candidate in candidates %}
+        <div class="candidate-table-heading">
+            <div>
+                <h5>All Candidates</h5>
+                <p>Review candidate profiles and AI screening scores.</p>
+            </div>
+            <span class="candidate-total-badge">
+                {{ candidates|length }} Applicants
+            </span>
+        </div>
 
-<tr>
+        <div class="table-responsive">
+            <table class="table candidate-table align-middle">
 
-<td>
+                <thead>
+                    <tr>
+                        <th>RANK</th>
+                        <th>CANDIDATE</th>
+                        <th>JOB POSITION</th>
+                        <th>AI SCORE</th>
+                        <th>STATUS</th>
+                        <th>ACTION</th>
+                    </tr>
+                </thead>
 
-{% if forloop.counter == 1 %}
-🥇
+                <tbody>
+                    {% for candidate in candidates %}
+                    <tr>
+                        <td>
+                            <span class="candidate-rank">
+                                {% if forloop.counter == 1 %}
+                                    1st
+                                {% elif forloop.counter == 2 %}
+                                    2nd
+                                {% elif forloop.counter == 3 %}
+                                    3rd
+                                {% else %}
+                                    {{ forloop.counter }}
+                                {% endif %}
+                            </span>
+                        </td>
 
-{% elif forloop.counter == 2 %}
-🥈
+                        <td>
+                            <div class="candidate-name-cell">
+                                <div class="candidate-avatar">
+                                    {{ candidate.name|first|upper }}
+                                </div>
+                                <div>
+                                    <strong>{{ candidate.name }}</strong>
+                                    <small>{{ candidate.email }}</small>
+                                </div>
+                            </div>
+                        </td>
 
-{% elif forloop.counter == 3 %}
-🥉
+                        <td>
+                            <span class="candidate-job">
+                                {{ candidate.job.title }}
+                            </span>
+                        </td>
 
-{% else %}
+                        <td>
+                            {% if candidate.ai_score >= 80 %}
+                                <span class="score-badge score-high">
+                                    {{ candidate.ai_score|floatformat:1 }}%
+                                </span>
+                            {% elif candidate.ai_score >= 60 %}
+                                <span class="score-badge score-medium">
+                                    {{ candidate.ai_score|floatformat:1 }}%
+                                </span>
+                            {% else %}
+                                <span class="score-badge score-low">
+                                    {{ candidate.ai_score|floatformat:1 }}%
+                                </span>
+                            {% endif %}
+                        </td>
 
-{{ forloop.counter }}
+                        <td>
+                            {% if candidate.status == "Shortlisted" %}
+                                <span class="status-badge status-shortlisted">
+                                    <i class="bi bi-check-circle"></i> Shortlisted
+                                </span>
+                            {% elif candidate.status == "Rejected" %}
+                                <span class="status-badge status-rejected">
+                                    <i class="bi bi-x-circle"></i> Rejected
+                                </span>
+                            {% else %}
+                                <span class="status-badge status-pending">
+                                    <i class="bi bi-clock"></i> Pending
+                                </span>
+                            {% endif %}
+                        </td>
 
-{% endif %}
+                        <td>
+                            <a href="{% url 'candidate_detail' candidate.id %}"
+                               class="candidate-view-btn">
+                                View Profile <i class="bi bi-arrow-right"></i>
+                            </a>
+                        </td>
+                    </tr>
 
-</td>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="candidate-empty">
+                            <i class="bi bi-person-x"></i>
+                            <h5>No candidates found</h5>
+                            <p>Upload a resume to add your first candidate.</p>
+                            <a href="{% url 'upload_candidate' %}" class="btn btn-primary btn-sm">
+                                Upload Resume
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
 
-<td>{{ candidate.name }}</td>
-
-<td>{{ candidate.job.title }}</td>
-
-<td>
-
-{% if candidate.ai_score >= 80 %}
-
-<span class="badge bg-success">
-{{ candidate.ai_score }} %
-</span>
-
-{% elif candidate.ai_score >= 60 %}
-
-<span class="badge bg-warning text-dark">
-{{ candidate.ai_score }} %
-</span>
-
-{% else %}
-
-<span class="badge bg-danger">
-{{ candidate.ai_score }} %
-</span>
-
-{% endif %}
-
-</td>
-
-<td>{{ candidate.status }}</td>
-
-<td>
-    <a href="{% url 'candidate_detail' candidate.id %}"
-       class="btn btn-primary btn-sm">
-        View
-    </a>
-</td>
-
-</tr>
-
-{% endfor %}
-
-</tbody>
-
-</table>
+            </table>
+        </div>
+    </div>
 
 </div>
 

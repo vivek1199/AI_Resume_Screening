@@ -1,54 +1,69 @@
+
 {% extends 'base/base.html' %}
 
-{% block title %}
-Delete Job
-{% endblock %}
+{% block title %}Delete Job | AI Resume Screening{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<div class="delete-job-page">
 
-<div class="card shadow">
+    <div class="delete-job-card">
 
-<div class="card-header bg-danger text-white">
+        <!-- Warning Icon -->
+        <div class="delete-warning-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
 
-<h3>Delete Job</h3>
+        <span class="dashboard-eyebrow">JOB MANAGEMENT</span>
 
-</div>
+        <h2>Delete Job Position?</h2>
 
-<div class="card-body">
+        <p class="delete-warning-text">
+            Are you sure you want to delete this job?
+            This action cannot be undone.
+        </p>
 
-<h4>
+        <!-- Job Details -->
+        <div class="delete-job-details">
 
-Are you sure you want to delete
+            <div>
+                <span>Job Title</span>
+                <strong>{{ job.title }}</strong>
+            </div>
 
-<strong>{{ job.title }}</strong>?
+            <div>
+                <span>Company</span>
+                <strong>{{ job.company|default:"Not specified" }}</strong>
+            </div>
 
-</h4>
+            <div>
+                <span>Experience</span>
+                <strong>{{ job.experience }} Years</strong>
+            </div>
 
-<form method="POST">
+            <div>
+                <span>Salary</span>
+                <strong>₹{{ job.salary }}</strong>
+            </div>
 
-{% csrf_token %}
+        </div>
 
-<button
-class="btn btn-danger">
+        <!-- Confirmation Form -->
+        <form method="POST" class="delete-job-actions">
 
-Yes, Delete
+            {% csrf_token %}
 
-</button>
+            <a href="{% url 'job_list' %}" class="delete-cancel-btn">
+                <i class="bi bi-arrow-left"></i> Cancel
+            </a>
 
-<a href="{% url 'job_list' %}"
-class="btn btn-secondary">
+            <button type="submit" class="delete-confirm-btn">
+                <i class="bi bi-trash"></i> Yes, Delete Job
+            </button>
 
-Cancel
+        </form>
 
-</a>
-
-</form>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 

@@ -1,44 +1,261 @@
-{% extends "base/base.html" %}
+
+{% extends 'base/base.html' %}
+
+{% block title %}Apply for Job{% endblock %}
 
 {% block content %}
 
-<div class="container mt-5">
+<style>
+    .apply-wrapper {
+        max-width: 950px;
+        margin: 35px auto;
+        padding: 0 15px;
+    }
 
-<div class="card shadow">
+    .apply-header {
+        background: linear-gradient(120deg, #2563eb, #4f46e5);
+        color: white;
+        padding: 30px;
+        border-radius: 18px;
+        margin-bottom: 25px;
+        box-shadow: 0 8px 25px rgba(37, 99, 235, .15);
+    }
 
-<div class="card-body">
+    .apply-header h2 {
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
 
-<h2>
+    .apply-header p {
+        margin: 0;
+        opacity: .9;
+    }
 
-Apply for
+    .apply-card {
+        background: white;
+        border-radius: 16px;
+        border: 1px solid #e8edf5;
+        box-shadow: 0 8px 30px rgba(15, 23, 42, .06);
+        overflow: hidden;
+    }
 
-{{ job.title }}
+    .apply-card-header {
+        padding: 22px 30px;
+        border-bottom: 1px solid #edf0f5;
+    }
 
-</h2>
+    .apply-card-body {
+        padding: 30px;
+    }
 
-<hr>
+    .job-info {
+        background: #f5f8ff;
+        border: 1px solid #e1eaff;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 25px;
+    }
 
-<form
-method="POST"
-enctype="multipart/form-data">
+    .job-info h5 {
+        color: #1e40af;
+        font-weight: 700;
+    }
 
-{% csrf_token %}
+    .apply-card form p {
+        margin-bottom: 20px;
+    }
 
-{{ form.as_p }}
+    .apply-card form label {
+        display: block;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
 
-<button
-type="submit"
-class="btn btn-success">
+    .apply-card form input,
+    .apply-card form select,
+    .apply-card form textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #dbe2ea;
+        border-radius: 9px;
+        background: #f8fafc;
+        transition: .2s ease;
+    }
 
-Submit Application
+    .apply-card form input:focus,
+    .apply-card form select:focus,
+    .apply-card form textarea:focus {
+        border-color: #3b82f6;
+        background: white;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, .12);
+    }
 
-</button>
+    .apply-card form input[type="file"] {
+        padding: 15px;
+        border: 2px dashed #93b4f5;
+        background: #f5f8ff;
+        cursor: pointer;
+    }
 
-</form>
+    .apply-card form input[type="file"]:hover {
+        border-color: #2563eb;
+    }
 
-</div>
+    .apply-card form ul {
+        color: #dc2626;
+        font-size: 13px;
+        padding-left: 20px;
+        margin-top: 6px;
+    }
 
-</div>
+    .apply-btn {
+        width: 100%;
+        padding: 14px;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(120deg, #2563eb, #4f46e5);
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+        transition: .25s;
+    }
+
+    .apply-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(37, 99, 235, .25);
+    }
+
+    .apply-note {
+        background: #f0f9ff;
+        border-radius: 10px;
+        padding: 15px;
+        color: #475569;
+        font-size: 14px;
+        margin-bottom: 22px;
+    }
+
+    @media(max-width: 576px) {
+        .apply-header {
+            padding: 22px;
+        }
+
+        .apply-card-body {
+            padding: 20px;
+        }
+
+        .apply-card-header {
+            padding: 20px;
+        }
+    }
+</style>
+
+<div class="apply-wrapper">
+
+    <!-- Page Header -->
+    <div class="apply-header">
+
+        <span class="badge bg-light text-primary mb-3">
+            JOB APPLICATION
+        </span>
+
+        <h2>
+            <i class="bi bi-send me-2"></i>
+            Apply for a Job
+        </h2>
+
+        <p>
+            Submit your details and resume to begin your AI-powered screening.
+        </p>
+
+    </div>
+
+    <!-- Application Card -->
+    <div class="apply-card">
+
+        <div class="apply-card-header">
+
+            <h5 class="fw-bold mb-1">
+                <i class="bi bi-file-earmark-person text-primary me-2"></i>
+                Application Details
+            </h5>
+
+            <small class="text-muted">
+                Please provide accurate information.
+            </small>
+
+        </div>
+
+        <div class="apply-card-body">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- Selected Job -->
+            {% if job %}
+            <div class="job-info">
+
+                <h5>
+                    <i class="bi bi-briefcase me-2"></i>
+                    {{ job.title }}
+                </h5>
+
+                <p class="mb-2 text-muted">
+                    <i class="bi bi-building me-2"></i>
+                    {{ job.company }}
+                </p>
+
+                <div class="d-flex flex-wrap gap-3 text-muted small">
+
+                    <span>
+                        <i class="bi bi-clock me-1"></i>
+                        {{ job.experience }} Years Experience
+                    </span>
+
+                    <span>
+                        <i class="bi bi-cash me-1"></i>
+                        {{ job.salary }}
+                    </span>
+
+                </div>
+
+            </div>
+            {% endif %}
+
+            <div class="apply-note">
+                <i class="bi bi-info-circle text-primary me-2"></i>
+                Your resume will be analyzed automatically by our AI screening system after submission.
+                Only PDF and DOCX files up to 5 MB are accepted.
+            </div>
+
+            <form method="POST" enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {{ form.non_field_errors }}
+                    </div>
+                {% endif %}
+
+                {{ form.as_p }}
+
+                <button type="submit" class="apply-btn">
+                    <i class="bi bi-send me-2"></i>
+                    Submit Application
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
 
 </div>
 
